@@ -74,7 +74,7 @@ public class ManagedServiceFactoryIT {
                 features(maven("com.savoirtech.eos", "eos-itest-features", projectVersion).type("xml").classifier("features"), "eos-itest-bundle"),
                 junitBundles(),
                 keepRuntimeFolder(),
-                logLevel(LogLevelOption.LogLevel.INFO));
+                logLevel(LogLevelOption.LogLevel.WARN));
     }
     
     @Test
