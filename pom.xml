@@ -19,7 +19,7 @@
     <parent>
         <groupId>com.savoirtech</groupId>
         <artifactId>savoir-parent</artifactId>
-        <version>1.0.3-SNAPSHOT</version>
+        <version>1.0.3</version>
     </parent>
 
     <groupId>com.savoirtech.eos</groupId>

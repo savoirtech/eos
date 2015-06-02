@@ -16,8 +16,7 @@
 
 package com.savoirtech.eos.pattern.factory;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.MapMaker;
 import com.savoirtech.eos.util.TypeVariableUtils;
 import org.apache.commons.lang3.Validate;
 import org.osgi.framework.BundleContext;
@@ -29,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Superclass for implementing {@link ManagedServiceFactory} implementations.
@@ -43,7 +43,7 @@ public abstract class AbstractManagedServiceFactory<T> implements ManagedService
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractManagedServiceFactory.class);
 
     private final Class<T> serviceType;
-    private final Cache<String, ServiceRegistration<T>> registrations = CacheBuilder.newBuilder().concurrencyLevel(5).build();
+    private final Map<String, ServiceRegistration<T>> registrations = new MapMaker().concurrencyLevel(5).makeMap();
     private final BundleContext bundleContext;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ public abstract class AbstractManagedServiceFactory<T> implements ManagedService
 
     @Override
     public void deleted(String pid) {
-        final ServiceRegistration<T> registration = registrations.getIfPresent(pid);
+        final ServiceRegistration<T> registration = registrations.get(pid);
         if (registration != null) {
             LOGGER.info("Unregistering OSGi service for pid '{}'...", pid);
             final T service = bundleContext.getService(registration.getReference());
