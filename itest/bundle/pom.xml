@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
   ~ Copyright (c) 2015-2015 Savoir Technologies, Inc.
   ~
@@ -14,30 +15,20 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.savoirtech.eos</groupId>
-        <artifactId>eos-parent</artifactId>
+        <artifactId>eos-itest-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>eos-core</artifactId>
-    <packaging>bundle</packaging>
-    <name>SavoirTech :: Eos :: Core</name>
+    <artifactId>eos-itest-bundle</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons.lang3.version}</version>
-        </dependency>
-    </dependencies>
+    <packaging>bundle</packaging>
+
+    <name>SavoirTech :: Eos :: Integration Test :: Bundle</name>
 
     <build>
         <plugins>
@@ -47,4 +38,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
