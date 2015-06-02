@@ -38,6 +38,9 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
+        <!-- No need to deploy integration tests -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+
         <!-- Dependency Versions -->
         <aqute.version>2.4.0</aqute.version>
         <commons.lang3.version>3.4</commons.lang3.version>
@@ -48,6 +51,7 @@
         <osgi.version>5.0.0</osgi.version>
         <pax.exam.version>4.5.0</pax.exam.version>
         <slf4j.version>1.7.7</slf4j.version>
+
 
     </properties>
 
