@@ -50,6 +50,8 @@
         <pax.exam.version>4.5.0</pax.exam.version>
         <slf4j.version>1.7.7</slf4j.version>
 
+        <sonar.jacoco.itReportPath>${jacoco.out.path}/${jacoco.out.file}</sonar.jacoco.itReportPath>
+
     </properties>
 
     <dependencies>
