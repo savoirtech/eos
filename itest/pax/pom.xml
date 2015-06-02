@@ -93,6 +93,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <inherited>true</inherited>
                 <configuration>
+                    <forkMode>once</forkMode>
                     <systemPropertyVariables>
                         <project.version>${project.version}</project.version>
                         <karaf.version>${karaf.version}</karaf.version>
