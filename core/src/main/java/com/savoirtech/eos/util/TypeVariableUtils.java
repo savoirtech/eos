@@ -25,9 +25,9 @@ import java.util.Map;
 public class TypeVariableUtils {
 
     @SuppressWarnings("unchecked")
-    public static <T extends P, P, C extends Type> C getTypeVariableBinding(Class<T> concreteClass, Class<P> definingClass, int varIndex) {
+    public static <T,C extends Type> C getTypeVariableBinding(Class<T> concreteClass, Class<? super T> definingClass, int varIndex) {
         final Map<TypeVariable<?>, Type> typeArguments = TypeUtils.getTypeArguments(concreteClass, definingClass);
-        final TypeVariable<Class<P>> entityTypeVar = definingClass.getTypeParameters()[varIndex];
+        TypeVariable<? extends Class<? super T>> entityTypeVar = definingClass.getTypeParameters()[varIndex];
         return (C) typeArguments.get(entityTypeVar);
     }
 }
