@@ -95,6 +95,7 @@
                 <configuration>
                     <forkMode>once</forkMode>
                     <systemPropertyVariables>
+                        <jvm.options>${argLine}</jvm.options>
                         <project.version>${project.version}</project.version>
                         <karaf.version>${karaf.version}</karaf.version>
                     </systemPropertyVariables>

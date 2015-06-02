@@ -18,6 +18,8 @@ package com.savoirtech.eos.itest.pax;
 
 import com.savoirtech.eos.itest.bundle.service.Greeter;
 import com.savoirtech.eos.itest.bundle.service.HelloService;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
@@ -37,7 +39,7 @@ import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class ManagedServiceFactoryIT {
+public class ManagedServiceFactoryIT extends Assert {
 //----------------------------------------------------------------------------------------------------------------------
 // Fields
 //----------------------------------------------------------------------------------------------------------------------
@@ -54,23 +56,32 @@ public class ManagedServiceFactoryIT {
     @Filter("(language=english)")
     private Greeter englishGreeter;
 
+    @Inject
+    @Filter("(language=spanish)")
+    private Greeter spanishGreeter;
+
 //----------------------------------------------------------------------------------------------------------------------
 // Other Methods
 //----------------------------------------------------------------------------------------------------------------------
 
     @Configuration
     public Option[] configure() {
+        final String jvmOptions = StringUtils.defaultIfBlank(System.getProperty("jvm.options"), "-Dnoop");
         final String karafVersion = System.getProperty("karaf.version", DEFAULT_KARAF_VERSION);
         final String projectVersion = System.getProperty("project.version");
         return options(
                 karafDistributionConfiguration()
                         .frameworkUrl(maven("org.apache.karaf", "apache-karaf", karafVersion).type("tar.gz"))
                         .unpackDirectory(new File("target/karaf")),
+                vmOption(jvmOptions),
                 configureConsole()
                         .startRemoteShell()
                         .ignoreLocalConsole(),
                 editConfigurationFileExtend("etc/com.savoirtech.eos.itest.bundle.greeter-1.cfg", "language", "english"),
                 editConfigurationFileExtend("etc/com.savoirtech.eos.itest.bundle.greeter-1.cfg", "pattern", "Hello, %s!"),
+                editConfigurationFileExtend("etc/com.savoirtech.eos.itest.bundle.greeter-2.cfg", "language", "spanish"),
+                editConfigurationFileExtend("etc/com.savoirtech.eos.itest.bundle.greeter-2.cfg", "pattern", "Hola, %s!"),
+
                 features(maven("com.savoirtech.eos", "eos-itest-features", projectVersion).type("xml").classifier("features"), "eos-itest-bundle"),
                 junitBundles(),
                 keepRuntimeFolder(),
@@ -79,6 +90,7 @@ public class ManagedServiceFactoryIT {
     
     @Test
     public void testManagedServiceFactoryCreation() throws Exception {
-        System.out.println(helloService.sayHello("english", "OSGi"));
+        assertEquals("Hello, OSGi!", helloService.sayHello("english", "OSGi"));
+        assertEquals("Hola, OSGi!", helloService.sayHello("spanish", "OSGi"));
     }
 }
