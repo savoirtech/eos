@@ -108,10 +108,10 @@ public abstract class AbstractManagedServiceFactory<T> implements ManagedService
     public void deleted(String pid) {
         final ServiceRegistration<T> registration = registrations.get(pid);
         if (registration != null) {
-            LOGGER.info("Unregistering OSGi service for pid '{}'...", pid);
+            LOGGER.info("Unregistering OSGi service for pid \"{}\"...", pid);
             final T service = bundleContext.getService(registration.getReference());
             registration.unregister();
-            LOGGER.info("Destroying service object for pid '{}'...", pid);
+            LOGGER.info("Destroying service object for pid \"{}\"...", pid);
             destroy(pid, service);
         }
     }
@@ -124,14 +124,14 @@ public abstract class AbstractManagedServiceFactory<T> implements ManagedService
     @Override
     public void updated(String pid, Dictionary<String, ?> properties) throws ConfigurationException {
         deleted(pid);
-        LOGGER.info("Creating new service object for pid '{}'...", pid);
+        LOGGER.info("Creating new service object for pid \"{}\"...", pid);
         T service = newService(pid, properties);
 
         final Dictionary<String, ?> serviceProperties = serviceProperties(properties);
-        LOGGER.info("Registering OSGi service for pid '{}' using service properties \n{}...", pid, serviceProperties);
+        LOGGER.info("Registering OSGi service for pid \"{}\" using service properties \n{}...", pid, serviceProperties);
         final ServiceRegistration<T> registration = bundleContext.registerService(serviceType, service, serviceProperties);
         registrations.put(pid, registration);
-        LOGGER.info("Successfully registered OSGi service for pid '{}'.", pid);
+        LOGGER.info("Successfully registered OSGi service for pid \"{}\".", pid);
     }
 
 //----------------------------------------------------------------------------------------------------------------------

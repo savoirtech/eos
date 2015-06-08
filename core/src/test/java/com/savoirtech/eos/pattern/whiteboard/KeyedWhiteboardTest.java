@@ -164,7 +164,6 @@ public class KeyedWhiteboardTest extends MockObjectTestCase {
         listener.serviceChanged(new ServiceEvent(ServiceEvent.REGISTERED,serviceReference));
 
         when(service.getLanguage()).thenReturn("spanish");
-        when(serviceReference.getProperty(Constants.SERVICE_ID)).thenReturn(2L);
         listener.serviceChanged(new ServiceEvent(ServiceEvent.MODIFIED,serviceReference));
         assertEquals(1, whiteboard.getServiceCount());
         verify(bundleContext).ungetService(serviceReference);
