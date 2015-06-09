@@ -91,6 +91,10 @@ public abstract class AbstractWhiteboard<S, T> {
 // Getter/Setter Methods
 //----------------------------------------------------------------------------------------------------------------------
 
+    protected BundleContext getBundleContext() {
+        return bundleContext;
+    }
+
     protected Logger getLogger() {
         return logger;
     }
