@@ -50,7 +50,7 @@ public abstract class AbstractWhiteboard<S, T> {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Constructs a new KeyedWhiteboard which trackes service of the prescribed service type, mapping them to keys using
+     * Constructs a new AbstractWhiteboard which tracks service of the prescribed service type, mapping them to keys using
      * the given key function.
      *
      * @param bundleContext the bundle context
@@ -60,8 +60,6 @@ public abstract class AbstractWhiteboard<S, T> {
         this.bundleContext = bundleContext;
         this.serviceType = serviceType;
         this.serviceTracker = new ServiceTracker<>(bundleContext, serviceType, new TrackerCustomizer());
-        logger.info("Opening ServiceTracker to search for {} services...", serviceType.getCanonicalName());
-        serviceTracker.open(true);
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -104,22 +102,30 @@ public abstract class AbstractWhiteboard<S, T> {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Closes this whiteboard, cleaning no longer needed resources.  It is not necessary to call this method if you
-     * wish for the service references to remain in effect until the owning bundle is stopped, as it will be
-     * cleaned up automatically.
-     */
-    public void close() {
-        logger.info("Closing ServiceTracker searching for {} services...", serviceType.getCanonicalName());
-        serviceTracker.close();
-    }
-
-    /**
      * Returns the current number of services registered.
      *
      * @return the current number of services registered
      */
     public int getServiceCount() {
         return trackingObjects.size();
+    }
+
+    /**
+     * Starts the whiteboard.  This will initiate the search for all matching services.
+     */
+    public void start() {
+        logger.info("Opening ServiceTracker to search for {} services...", serviceType.getCanonicalName());
+        serviceTracker.open(true);
+    }
+
+    /**
+     * Closes this whiteboard, cleaning no longer needed resources.  It is not necessary to call this method if you
+     * wish for the service references to remain in effect until the owning bundle is stopped, as it will be
+     * cleaned up automatically.
+     */
+    public void stop() {
+        logger.info("Closing ServiceTracker searching for {} services...", serviceType.getCanonicalName());
+        serviceTracker.close();
     }
 
 //----------------------------------------------------------------------------------------------------------------------

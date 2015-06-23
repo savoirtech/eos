@@ -49,6 +49,7 @@ public class KeyedWhiteboardTest extends MockObjectTestCase {
     public void testAddingService() throws Exception {
 
         KeyedWhiteboard<String,HelloService> whiteboard = new KeyedWhiteboard<>(bundleContext, HelloService.class, (svc, props) -> svc.getLanguage());
+        whiteboard.start();
         String filterSpec = String.format("(objectClass=%s)", HelloService.class.getName());
         when(bundleContext.createFilter(filterSpec)).thenReturn(filter);
 
@@ -81,7 +82,7 @@ public class KeyedWhiteboardTest extends MockObjectTestCase {
         doNothing().when(bundleContext).addServiceListener(listenerCaptor.capture(), eq(filterSpec));
 
         KeyedWhiteboard<String,HelloService> whiteboard = new KeyedWhiteboard<>(bundleContext, HelloService.class, (svc, props) -> null);
-
+        whiteboard.start();
         ServiceListener listener = listenerCaptor.getValue();
 
         verify(bundleContext).createFilter(filterSpec);
@@ -104,7 +105,7 @@ public class KeyedWhiteboardTest extends MockObjectTestCase {
         doNothing().when(bundleContext).addServiceListener(listenerCaptor.capture(), eq(filterSpec));
 
         KeyedWhiteboard<String,HelloService> whiteboard = new KeyedWhiteboard<>(bundleContext, HelloService.class, (svc, props) -> svc.getLanguage());
-
+        whiteboard.start();
         ServiceListener listener = listenerCaptor.getValue();
 
         when(bundleContext.getService(serviceReference)).thenReturn(service);
@@ -128,7 +129,7 @@ public class KeyedWhiteboardTest extends MockObjectTestCase {
         doNothing().when(bundleContext).addServiceListener(listenerCaptor.capture(), eq(filterSpec));
 
         KeyedWhiteboard<String,HelloService> whiteboard = new KeyedWhiteboard<>(bundleContext, HelloService.class, (svc, props) -> svc.getLanguage());
-
+        whiteboard.start();
         ServiceListener listener = listenerCaptor.getValue();
 
         when(bundleContext.getService(serviceReference)).thenReturn(service);
@@ -152,7 +153,7 @@ public class KeyedWhiteboardTest extends MockObjectTestCase {
         doNothing().when(bundleContext).addServiceListener(listenerCaptor.capture(), eq(filterSpec));
 
         KeyedWhiteboard<String,HelloService> whiteboard = new KeyedWhiteboard<>(bundleContext, HelloService.class, (svc, props) -> svc.getLanguage());
-
+        whiteboard.start();
         ServiceListener listener = listenerCaptor.getValue();
 
         when(bundleContext.getService(serviceReference)).thenReturn(service);
@@ -170,8 +171,9 @@ public class KeyedWhiteboardTest extends MockObjectTestCase {
     }
 
     @Test
-    public void testClose() throws Exception {
+    public void testStop() throws Exception {
         KeyedWhiteboard<String,HelloService> whiteboard = new KeyedWhiteboard<>(bundleContext, HelloService.class, (svc, props) -> svc.getLanguage());
+        whiteboard.start();
         String filterSpec = String.format("(objectClass=%s)", HelloService.class.getName());
         when(bundleContext.createFilter(filterSpec)).thenReturn(filter);
 
@@ -187,7 +189,7 @@ public class KeyedWhiteboardTest extends MockObjectTestCase {
         when(serviceReference.getBundle()).thenReturn(bundle);
         when(bundle.getSymbolicName()).thenReturn("test");
         when(serviceReference.getProperty(Constants.SERVICE_ID)).thenReturn(1L);
-        whiteboard.close();
+        whiteboard.stop();
         verify(bundleContext).removeServiceListener(listener);
         verifyNoMoreInteractions(bundleContext);
     }
