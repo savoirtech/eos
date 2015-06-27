@@ -36,6 +36,12 @@
             <artifactId>commons-lang3</artifactId>
             <version>${commons.lang3.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.connect</artifactId>
+            <version>0.1.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
