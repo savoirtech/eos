@@ -33,7 +33,7 @@ public class EventListenerWhiteboard<L> extends AbstractWhiteboard<L, L> {
 
     public EventListenerWhiteboard(BundleContext bundleContext, Class<L> listenerType) {
         super(bundleContext, listenerType);
-        this.listenerSupport = EventListenerSupport.create(listenerType);
+        this.listenerSupport = new EventListenerSupport<>(listenerType, getClass().getClassLoader());
     }
 
 //----------------------------------------------------------------------------------------------------------------------

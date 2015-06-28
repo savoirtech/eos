@@ -28,7 +28,7 @@ import org.osgi.framework.ServiceRegistration;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OsgiTestCase extends MockObjectTestCase {
+public abstract class OsgiTestCase extends MockObjectTestCase {
 //----------------------------------------------------------------------------------------------------------------------
 // Fields
 //----------------------------------------------------------------------------------------------------------------------
