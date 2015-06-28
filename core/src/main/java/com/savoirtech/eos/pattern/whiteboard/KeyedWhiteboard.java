@@ -42,7 +42,7 @@ public class KeyedWhiteboard<K, S> extends AbstractWhiteboard<S, K> {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Constructs a new KeyedWhiteboard which trackes service of the prescribed service type, mapping them to keys using
+     * Constructs a new KeyedWhiteboard which tracks service of the prescribed service type, mapping them to keys using
      * the given key function.
      *
      * @param bundleContext the bundle context

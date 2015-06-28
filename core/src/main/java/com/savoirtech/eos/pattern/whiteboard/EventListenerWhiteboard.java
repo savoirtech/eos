@@ -20,6 +20,12 @@ import com.savoirtech.eos.util.ServiceProperties;
 import org.apache.commons.lang3.event.EventListenerSupport;
 import org.osgi.framework.BundleContext;
 
+/**
+ * A "whiteboard pattern" implementation which maintains a list of event listeners using a
+ * {@link EventListenerSupport} object.
+ *
+ * @param <L> the event interface
+ */
 public class EventListenerWhiteboard<L> extends AbstractWhiteboard<L, L> {
 //----------------------------------------------------------------------------------------------------------------------
 // Fields
@@ -31,6 +37,13 @@ public class EventListenerWhiteboard<L> extends AbstractWhiteboard<L, L> {
 // Constructors
 //----------------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Constructs a new EventListenerWhiteboard which tracks services of the specified listener type and
+     * adds them to its {@link EventListenerSupport}.
+     *
+     * @param bundleContext the bundle context
+     * @param listenerType the listener interface
+     */
     public EventListenerWhiteboard(BundleContext bundleContext, Class<L> listenerType) {
         super(bundleContext, listenerType);
         this.listenerSupport = new EventListenerSupport<>(listenerType, getClass().getClassLoader());
@@ -46,6 +59,14 @@ public class EventListenerWhiteboard<L> extends AbstractWhiteboard<L, L> {
         return service;
     }
 
+    /**
+     * Returns a proxy object which can be used to call listener methods on all
+     * of the registered event listeners. All calls made to this proxy will be
+     * forwarded to all registered listeners.
+     *
+     * @return a proxy object which can be used to call listener methods on all
+     * of the registered event listeners
+     */
     public L fire() {
         return listenerSupport.fire();
     }
