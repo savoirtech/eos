@@ -119,7 +119,7 @@ public class AbstractManagedServiceFactoryTest extends MockObjectTestCase {
 
 
     @Test(expected = ConfigurationException.class)
-    public void testGetRequiredMissinProperty() throws Exception {
+    public void testGetRequiredMissingProperty() throws Exception {
         Dictionary<String, Object> properties = new Hashtable<>();
         assertEquals("bar", AbstractManagedServiceFactory.getProperty("foo", properties));
     }
