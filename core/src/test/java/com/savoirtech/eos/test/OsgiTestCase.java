@@ -16,6 +16,9 @@
 
 package com.savoirtech.eos.test;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.apache.felix.connect.PojoServiceRegistryFactoryImpl;
 import org.apache.felix.connect.launch.BundleDescriptor;
 import org.apache.felix.connect.launch.ClasspathScanner;
@@ -25,9 +28,6 @@ import org.junit.Before;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 public abstract class OsgiTestCase extends MockObjectTestCase {
 //----------------------------------------------------------------------------------------------------------------------
 // Fields
@@ -35,7 +35,7 @@ public abstract class OsgiTestCase extends MockObjectTestCase {
 
     public static final String SYMBOLIC_NAME_HEADER = "Bundle-SymbolicName";
     protected BundleContext bundleContext;
-    private PojoServiceRegistry registry;
+    protected PojoServiceRegistry registry;
 
 //----------------------------------------------------------------------------------------------------------------------
 // Other Methods

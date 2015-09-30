@@ -17,6 +17,8 @@
 package com.savoirtech.eos.pattern.whiteboard;
 
 import com.savoirtech.eos.test.OsgiTestCase;
+import com.savoirtech.eos.util.HelloService;
+import com.savoirtech.eos.util.HelloServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.ServiceRegistration;
@@ -80,14 +82,4 @@ public class KeyedWhiteboardTest extends OsgiTestCase {
 // Inner Classes
 //----------------------------------------------------------------------------------------------------------------------
 
-    interface HelloService {
-        String sayHello(String name);
-    }
-
-    class HelloServiceImpl implements HelloService {
-        @Override
-        public String sayHello(String name) {
-            return "Hello, " + name + "!";
-        }
-    }
 }
