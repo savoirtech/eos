@@ -25,7 +25,7 @@
     <groupId>com.savoirtech.eos</groupId>
     <artifactId>eos-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.7</version>
     <name>SavoirTech :: Eos :: Parent</name>
     <inceptionYear>2015</inceptionYear>
 
