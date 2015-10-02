@@ -16,6 +16,8 @@
 
 package com.savoirtech.eos.pattern.whiteboard;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.savoirtech.eos.test.OsgiTestCase;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -54,7 +56,7 @@ public class EventListenerWhiteboardTest extends OsgiTestCase {
 
     @Test
     public void testWithListeners() throws Exception {
-        EventListenerWhiteboard<MyListener> whiteboard = new EventListenerWhiteboard<MyListener>(bundleContext, MyListener.class);
+        EventListenerWhiteboard<MyListener> whiteboard = new EventListenerWhiteboard<>(bundleContext, MyListener.class);
         whiteboard.start();
         registerService(MyListener.class, listener, serviceProps());
         whiteboard.fire().doSomething("foo");
@@ -63,11 +65,29 @@ public class EventListenerWhiteboardTest extends OsgiTestCase {
 
     @Test
     public void testAfterUnregistered() throws Exception {
-        EventListenerWhiteboard<MyListener> whiteboard = new EventListenerWhiteboard<MyListener>(bundleContext, MyListener.class);
+        EventListenerWhiteboard<MyListener> whiteboard = new EventListenerWhiteboard<>(bundleContext, MyListener.class);
         whiteboard.start();
         ServiceRegistration<MyListener> registration = registerService(MyListener.class, listener, serviceProps());
         registration.unregister();
         whiteboard.fire().doSomething("foo");
+        verifyNoMoreInteractions(listener);
+    }
+
+    @Test
+    public void testWithWrapper() throws Exception {
+        AtomicBoolean wrapperCalled = new AtomicBoolean(false);
+        EventListenerWhiteboard<MyListener> whiteboard = new EventListenerWhiteboard<>(bundleContext, MyListener.class, (svc,props) -> {
+            return new MyListener() {
+                @Override
+                public void doSomething(String msg) {
+                    wrapperCalled.set(true);
+                }
+            };
+        });
+        whiteboard.start();
+        registerService(MyListener.class, listener, serviceProps());
+        whiteboard.fire().doSomething("foo");
+        assertTrue(wrapperCalled.get());
         verifyNoMoreInteractions(listener);
     }
 

@@ -16,6 +16,8 @@
 
 package com.savoirtech.eos.pattern.whiteboard;
 
+import java.util.function.BiFunction;
+
 import com.savoirtech.eos.util.ServiceProperties;
 import org.apache.commons.lang3.event.EventListenerSupport;
 import org.osgi.framework.BundleContext;
@@ -31,7 +33,8 @@ public class EventListenerWhiteboard<L> extends AbstractWhiteboard<L, L> {
 // Fields
 //----------------------------------------------------------------------------------------------------------------------
 
-    private EventListenerSupport<L> listenerSupport;
+    private final EventListenerSupport<L> listenerSupport;
+    private final BiFunction<L, ServiceProperties, L> decorator;
 
 //----------------------------------------------------------------------------------------------------------------------
 // Constructors
@@ -42,11 +45,25 @@ public class EventListenerWhiteboard<L> extends AbstractWhiteboard<L, L> {
      * adds them to its {@link EventListenerSupport}.
      *
      * @param bundleContext the bundle context
-     * @param listenerType the listener interface
+     * @param listenerType  the listener interface
      */
     public EventListenerWhiteboard(BundleContext bundleContext, Class<L> listenerType) {
+        this(bundleContext, listenerType, (svc, props) -> svc);
+    }
+
+    /**
+     * Constructs a new EventListenerWhiteboard which tracks services of the specified listener type and
+     * adds them to its {@link EventListenerSupport}.  The services will be "decorated" using the supplied
+     * deocrator function.
+     *
+     * @param bundleContext the bundle context
+     * @param listenerType  the listener interface
+     * @param decorator     the decorator function
+     */
+    public EventListenerWhiteboard(BundleContext bundleContext, Class<L> listenerType, BiFunction<L, ServiceProperties, L> decorator) {
         super(bundleContext, listenerType);
         this.listenerSupport = new EventListenerSupport<>(listenerType, listenerType.getClassLoader());
+        this.decorator = decorator;
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -55,8 +72,11 @@ public class EventListenerWhiteboard<L> extends AbstractWhiteboard<L, L> {
 
     @Override
     protected L addService(L service, ServiceProperties props) {
-        listenerSupport.addListener(service);
-        return service;
+        L decorated = decorator.apply(service, props);
+        if (decorated != null) {
+            listenerSupport.addListener(decorated);
+        }
+        return decorated;
     }
 
     /**
