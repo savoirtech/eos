@@ -16,12 +16,13 @@
 
 package com.savoirtech.eos.pattern.whiteboard;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+
 import com.google.common.collect.MapMaker;
 import com.savoirtech.eos.util.ServiceProperties;
 import org.osgi.framework.BundleContext;
-
-import java.util.Map;
-import java.util.function.BiFunction;
 
 /**
  * A "whiteboard pattern" implementation which allows you to look up the service objects by a "key."
@@ -65,6 +66,10 @@ public class KeyedWhiteboard<K, S> extends AbstractWhiteboard<S, K> {
             serviceMap.put(key, service);
         }
         return key;
+    }
+
+    public Map<K,S> asMap() {
+        return new HashMap<>(serviceMap);
     }
 
     /**

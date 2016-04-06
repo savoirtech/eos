@@ -16,6 +16,8 @@
 
 package com.savoirtech.eos.pattern.whiteboard;
 
+import java.util.Map;
+
 import com.savoirtech.eos.test.OsgiTestCase;
 import com.savoirtech.eos.util.HelloService;
 import com.savoirtech.eos.util.HelloServiceImpl;
@@ -56,6 +58,17 @@ public class KeyedWhiteboardTest extends OsgiTestCase {
     }
 
     @Test
+    public void testAsMap() {
+        HelloService svc = new HelloServiceImpl();
+        registerService(HelloService.class, svc, serviceProps().with("language", "english"));
+        registerService(HelloService.class, svc, serviceProps().with("language", "spanish"));
+        Map<String, HelloService> map = whiteboard.asMap();
+        assertEquals(2, map.size());
+        assertSame(svc, map.get("english"));
+        assertSame(svc, map.get("spanish"));
+    }
+
+    @Test
     public void testModifiedService() throws Exception {
         HelloService svc = new HelloServiceImpl();
         ServiceRegistration<HelloService> reg = registerService(HelloService.class, svc, serviceProps().with("language", "english"));
@@ -77,9 +90,4 @@ public class KeyedWhiteboardTest extends OsgiTestCase {
         whiteboard.stop();
         assertEquals(0, whiteboard.getServiceCount());
     }
-
-//----------------------------------------------------------------------------------------------------------------------
-// Inner Classes
-//----------------------------------------------------------------------------------------------------------------------
-
 }
