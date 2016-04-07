@@ -68,6 +68,10 @@ public class KeyedWhiteboard<K, S> extends AbstractWhiteboard<S, K> {
         return key;
     }
 
+    /**
+     * Returns the services currently tracked by this whiteboard as a {@link Map} object.
+     * @return the map
+     */
     public Map<K,S> asMap() {
         return new HashMap<>(serviceMap);
     }
