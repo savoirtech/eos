@@ -16,6 +16,8 @@
 
 package com.savoirtech.eos.pattern.whiteboard;
 
+import java.util.Map;
+
 import com.google.common.collect.MapMaker;
 import com.savoirtech.eos.util.ServiceProperties;
 import org.osgi.framework.BundleContext;
@@ -24,8 +26,6 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * An abstract "whiteboard pattern" implementation which uses "tracking objects" to maintain the state of which services
@@ -143,10 +143,10 @@ public abstract class AbstractWhiteboard<S, T> {
             final ServiceProperties props = new ServiceProperties(reference);
             final T tracked = addService(service, props);
             if (tracked == null) {
-                logger.warn("Rejected modified service {} from bundle {}.", props.getServiceId(), reference.getBundle().getSymbolicName());
+                logger.warn("Rejected modified {} service {} from bundle {}.", serviceType.getSimpleName(), props.getServiceId(), reference.getBundle().getSymbolicName());
                 serviceTracker.remove(reference);
             } else {
-                logger.info("Accepted modified service {} (tracked by \"{}\") from bundle {}.", props.getServiceId(), tracked, reference.getBundle().getSymbolicName());
+                logger.info("Accepted modified {} service {} (tracked by \"{}\") from bundle {}.", serviceType.getSimpleName(), props.getServiceId(), tracked, reference.getBundle().getSymbolicName());
                 trackingObjects.put(props.getServiceId(), tracked);
             }
         }
@@ -167,11 +167,11 @@ public abstract class AbstractWhiteboard<S, T> {
             final ServiceProperties props = new ServiceProperties(reference);
             final T tracked = addService(service, props);
             if (tracked == null) {
-                logger.warn("Rejected service {} from bundle {}.", props.getServiceId(), reference.getBundle().getSymbolicName());
+                logger.warn("Rejected {} service {} from bundle {}.",serviceType.getSimpleName(), props.getServiceId(), reference.getBundle().getSymbolicName());
                 bundleContext.ungetService(reference);
                 return null;
             } else {
-                logger.info("Accepted service {} (tracked by \"{}\") from bundle {}.", props.getServiceId(), tracked, reference.getBundle().getSymbolicName());
+                logger.info("Accepted {} service {} (tracked by \"{}\") from bundle {}.", serviceType.getSimpleName(), props.getServiceId(), tracked, reference.getBundle().getSymbolicName());
                 trackingObjects.put(props.getServiceId(), tracked);
                 return service;
             }
