@@ -60,6 +60,8 @@ public abstract class AbstractWhiteboard<S, T> {
         this.bundleContext = bundleContext;
         this.serviceType = serviceType;
         this.serviceTracker = new ServiceTracker<>(bundleContext, serviceType, new TrackerCustomizer());
+        logger.info("Opening ServiceTracker to search for {} services...", serviceType.getCanonicalName());
+        serviceTracker.open(true);
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -116,10 +118,12 @@ public abstract class AbstractWhiteboard<S, T> {
 
     /**
      * Starts the whiteboard.  This will initiate the search for all matching services.
+     *
+     * Note: as of version 1.0.9, this method is deprecated, as the service tracker is opened in the constructor.
      */
+    @Deprecated
     public void start() {
-        logger.info("Opening ServiceTracker to search for {} services...", serviceType.getCanonicalName());
-        serviceTracker.open(true);
+        logger.warn("The start() method has been deprecated, please discontinue its use.");
     }
 
     /**

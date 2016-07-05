@@ -37,6 +37,7 @@ public class KeyedWhiteboardTest extends OsgiTestCase {
 //----------------------------------------------------------------------------------------------------------------------
 
     @Before
+    @SuppressWarnings("deprecation")
     public void createWhiteboard() {
         whiteboard = new KeyedWhiteboard<>(bundleContext, HelloService.class, (svc, props) -> props.getProperty("language"));
         whiteboard.start();
@@ -83,6 +84,17 @@ public class KeyedWhiteboardTest extends OsgiTestCase {
         ServiceRegistration<HelloService> reg = registerService(HelloService.class, svc, serviceProps().with("language", "english"));
         reg.setProperties(serviceProps().build());
         assertEquals(0, whiteboard.getServiceCount());
+    }
+
+    @Test
+    public void testWithDuplicateKey() {
+        HelloService svc1 = (name) -> String.format("Hello, %s!", name);
+        HelloService svc2 = (name) -> String.format("Hola, %s!", name);
+
+        registerService(HelloService.class, svc1, serviceProps().with("language", "english"));
+        registerService(HelloService.class, svc2, serviceProps().with("language", "english"));
+
+        assertEquals("Hello, Eos!", whiteboard.getService("english").sayHello("Eos"));
     }
 
     @Test

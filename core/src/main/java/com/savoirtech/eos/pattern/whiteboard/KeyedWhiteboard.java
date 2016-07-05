@@ -63,16 +63,21 @@ public class KeyedWhiteboard<K, S> extends AbstractWhiteboard<S, K> {
     protected K addService(S service, ServiceProperties props) {
         K key = keyFunction.apply(service, props);
         if (key != null) {
-            serviceMap.put(key, service);
+            S registered = serviceMap.computeIfAbsent(key, k -> service);
+            if (registered != service) {
+                getLogger().error("Duplicate key \"{}\" detected for service {}.", key, props.getServiceId());
+                key = null;
+            }
         }
         return key;
     }
 
     /**
      * Returns the services currently tracked by this whiteboard as a {@link Map} object.
+     *
      * @return the map
      */
-    public Map<K,S> asMap() {
+    public Map<K, S> asMap() {
         return new HashMap<>(serviceMap);
     }
 

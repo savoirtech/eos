@@ -34,9 +34,7 @@ public class DecoratorWhiteboardTest extends OsgiTestCase {
 
     @Test
     public void testServiceLifecycle() throws Exception {
-        HelloReverser decorator = new HelloReverser(bundleContext);
-        decorator.start();
-
+        new HelloReverser(bundleContext);
         ServiceReference<?>[] refs = registry.getServiceReferences(Reverser.class.getName(), null);
         assertNull(refs);
         ServiceRegistration<HelloServiceImpl> registration = registerService(HelloService.class, new HelloServiceImpl(), serviceProps());
@@ -51,8 +49,7 @@ public class DecoratorWhiteboardTest extends OsgiTestCase {
 
     @Test
     public void testServiceLifecycleWhenNoDecoratorReturned() throws Exception {
-        NullDecorator decorator = new NullDecorator(bundleContext);
-        decorator.start();
+        new NullDecorator(bundleContext);
         registerService(HelloService.class, new HelloServiceImpl(), serviceProps());
         ServiceReference<?>[] refs = registry.getServiceReferences(Reverser.class.getName(), null);
         assertNull(refs);

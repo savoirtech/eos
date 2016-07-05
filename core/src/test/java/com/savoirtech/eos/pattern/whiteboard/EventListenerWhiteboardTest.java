@@ -49,7 +49,6 @@ public class EventListenerWhiteboardTest extends OsgiTestCase {
     @Test
     public void testWithNoListeners() {
         EventListenerWhiteboard<MyListener> whiteboard = new EventListenerWhiteboard<>(bundleContext, MyListener.class);
-        whiteboard.start();
         whiteboard.fire().doSomething("foo");
         verifyNoMoreInteractions(listener);
     }
@@ -57,7 +56,6 @@ public class EventListenerWhiteboardTest extends OsgiTestCase {
     @Test
     public void testWithListeners() throws Exception {
         EventListenerWhiteboard<MyListener> whiteboard = new EventListenerWhiteboard<>(bundleContext, MyListener.class);
-        whiteboard.start();
         registerService(MyListener.class, listener, serviceProps());
         whiteboard.fire().doSomething("foo");
         verify(listener).doSomething("foo");
@@ -66,7 +64,6 @@ public class EventListenerWhiteboardTest extends OsgiTestCase {
     @Test
     public void testAfterUnregistered() throws Exception {
         EventListenerWhiteboard<MyListener> whiteboard = new EventListenerWhiteboard<>(bundleContext, MyListener.class);
-        whiteboard.start();
         ServiceRegistration<MyListener> registration = registerService(MyListener.class, listener, serviceProps());
         registration.unregister();
         whiteboard.fire().doSomething("foo");
@@ -84,7 +81,6 @@ public class EventListenerWhiteboardTest extends OsgiTestCase {
                 }
             };
         });
-        whiteboard.start();
         registerService(MyListener.class, listener, serviceProps());
         whiteboard.fire().doSomething("foo");
         assertTrue(wrapperCalled.get());

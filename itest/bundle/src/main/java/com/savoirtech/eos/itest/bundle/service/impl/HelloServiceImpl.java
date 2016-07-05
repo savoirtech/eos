@@ -35,7 +35,6 @@ public class HelloServiceImpl implements HelloService {
 
     public HelloServiceImpl(BundleContext bundleContext) {
         this.greeters = new KeyedWhiteboard<>(bundleContext, Greeter.class, (svc, props) -> svc.getLanguage());
-        greeters.start();
     }
 
 //----------------------------------------------------------------------------------------------------------------------
