@@ -44,6 +44,7 @@ public abstract class DecoratorWhiteboard<S, D> extends AbstractWhiteboard<S, Se
     public DecoratorWhiteboard(BundleContext bundleContext, Class<S> serviceType, Class<D> decoratorType) {
         super(bundleContext, serviceType);
         this.decoratorType = decoratorType;
+        start();
     }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -64,6 +64,7 @@ public class EventListenerWhiteboard<L> extends AbstractWhiteboard<L, L> {
         super(bundleContext, listenerType);
         this.listenerSupport = new EventListenerSupport<>(listenerType, listenerType.getClassLoader());
         this.decorator = decorator;
+        start();
     }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -17,6 +17,7 @@
 package com.savoirtech.eos.pattern.whiteboard;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.common.collect.MapMaker;
 import com.savoirtech.eos.util.ServiceProperties;
@@ -44,6 +45,7 @@ public abstract class AbstractWhiteboard<S, T> {
     private final Map<Long, T> trackingObjects = new MapMaker().concurrencyLevel(5).makeMap();
     private final BundleContext bundleContext;
     private final Class<S> serviceType;
+    private final AtomicBoolean started = new AtomicBoolean(false);
 
 //----------------------------------------------------------------------------------------------------------------------
 // Constructors
@@ -60,8 +62,6 @@ public abstract class AbstractWhiteboard<S, T> {
         this.bundleContext = bundleContext;
         this.serviceType = serviceType;
         this.serviceTracker = new ServiceTracker<>(bundleContext, serviceType, new TrackerCustomizer());
-        logger.info("Opening ServiceTracker to search for {} services...", serviceType.getCanonicalName());
-        serviceTracker.open(true);
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -118,12 +118,14 @@ public abstract class AbstractWhiteboard<S, T> {
 
     /**
      * Starts the whiteboard.  This will initiate the search for all matching services.
-     *
-     * Note: as of version 1.0.9, this method is deprecated, as the service tracker is opened in the constructor.
      */
-    @Deprecated
     public void start() {
-        logger.warn("The start() method has been deprecated, please discontinue its use.");
+        if(started.compareAndSet(false, true)) {
+            logger.info("Opening ServiceTracker to search for {} services...", serviceType.getCanonicalName());
+            serviceTracker.open(true);
+        } else {
+            logger.warn("ServiceTracker already open, searching for {} services.", serviceType.getCanonicalName());
+        }
     }
 
     /**
@@ -141,6 +143,27 @@ public abstract class AbstractWhiteboard<S, T> {
 //----------------------------------------------------------------------------------------------------------------------
 
     private class TrackerCustomizer implements ServiceTrackerCustomizer<S, S> {
+//----------------------------------------------------------------------------------------------------------------------
+// ServiceTrackerCustomizer Implementation
+//----------------------------------------------------------------------------------------------------------------------
+
+
+        @Override
+        public S addingService(ServiceReference<S> reference) {
+            final S service = bundleContext.getService(reference);
+            final ServiceProperties props = new ServiceProperties(reference);
+            final T tracked = addService(service, props);
+            if (tracked == null) {
+                logger.warn("Rejected {} service {} from bundle {}.",serviceType.getSimpleName(), props.getServiceId(), reference.getBundle().getSymbolicName());
+                bundleContext.ungetService(reference);
+                return null;
+            } else {
+                logger.info("Accepted {} service {} (tracked by \"{}\") from bundle {}.", serviceType.getSimpleName(), props.getServiceId(), tracked, reference.getBundle().getSymbolicName());
+                trackingObjects.put(props.getServiceId(), tracked);
+                return service;
+            }
+        }
+
         @Override
         public void modifiedService(ServiceReference<S> reference, S service) {
             removedService(reference, service);
@@ -162,22 +185,6 @@ public abstract class AbstractWhiteboard<S, T> {
             if (previouslyTracked != null) {
                 removeService(service, previouslyTracked);
                 bundleContext.ungetService(reference);
-            }
-        }
-
-        @Override
-        public S addingService(ServiceReference<S> reference) {
-            final S service = bundleContext.getService(reference);
-            final ServiceProperties props = new ServiceProperties(reference);
-            final T tracked = addService(service, props);
-            if (tracked == null) {
-                logger.warn("Rejected {} service {} from bundle {}.",serviceType.getSimpleName(), props.getServiceId(), reference.getBundle().getSymbolicName());
-                bundleContext.ungetService(reference);
-                return null;
-            } else {
-                logger.info("Accepted {} service {} (tracked by \"{}\") from bundle {}.", serviceType.getSimpleName(), props.getServiceId(), tracked, reference.getBundle().getSymbolicName());
-                trackingObjects.put(props.getServiceId(), tracked);
-                return service;
             }
         }
     }

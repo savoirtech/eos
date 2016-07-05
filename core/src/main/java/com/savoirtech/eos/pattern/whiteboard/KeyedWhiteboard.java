@@ -53,6 +53,7 @@ public class KeyedWhiteboard<K, S> extends AbstractWhiteboard<S, K> {
     public KeyedWhiteboard(BundleContext bundleContext, Class<S> serviceType, BiFunction<S, ServiceProperties, K> keyFunction) {
         super(bundleContext, serviceType);
         this.keyFunction = keyFunction;
+        start();
     }
 
 //----------------------------------------------------------------------------------------------------------------------
