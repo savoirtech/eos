@@ -64,13 +64,13 @@ public class KeyedWhiteboard<K, S> extends AbstractWhiteboard<S, K> {
     protected K addService(S service, ServiceProperties props) {
         K key = keyFunction.apply(service, props);
         if (key != null) {
-            S registered = serviceMap.computeIfAbsent(key, k -> service);
-            if (registered != service) {
+            if (serviceMap.putIfAbsent(key, service) != null) {
                 getLogger().error("Duplicate key \"{}\" detected for service {}.", key, props.getServiceId());
-                key = null;
+                return null;
             }
+            return key;
         }
-        return key;
+        return null;
     }
 
     /**
