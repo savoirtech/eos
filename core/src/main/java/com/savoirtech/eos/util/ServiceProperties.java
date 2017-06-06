@@ -16,6 +16,7 @@
 
 package com.savoirtech.eos.util;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 
@@ -37,6 +38,15 @@ public class ServiceProperties {
 //----------------------------------------------------------------------------------------------------------------------
 // Other Methods
 //----------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the bundle corresponding to the service.
+     *
+     * @return the bundle corresponding to the service
+     */
+    public Bundle getBundle() {
+        return serviceReference.getBundle();
+    }
 
     public <T> T getProperty(String key) {
         return getProperty(key, null);
